@@ -7,18 +7,22 @@ class NewItem extends Component {
   state = { value: '' };
 
   handleChange = event => {
-    // Do something when the state of this input changes.
+    const value = event.target.value;
+    this.setState({
+      value
+    })
   };
 
   handleSubmit = event => {
-    const { onSubmit } = this.props;
+    const { addItem } = this.props;
     const { value } = this.state;
 
     event.preventDefault();
+    addItem({value, id: uniqueId, packed: false});
 
-    // Do something when a new value is submitted.
-
-    // Reset the state of the component.
+    this.setState({
+      value: ''
+    })
   };
 
   render() {
