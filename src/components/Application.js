@@ -49,6 +49,12 @@ class Application extends Component {
   }
 
   markAllUnpacked = () => {
+    const items = this.state.items.map(item => {
+      return {...item, packed: false}
+    });
+    this.setState({
+      items
+    })
   }
 
   render() {
