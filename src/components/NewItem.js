@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import uniqueId from 'lodash/uniqueId';
-
+import React, {Component} from 'react';
+import {addItem} from './actions'
 import './NewItem.css';
 
 class NewItem extends Component {
-  state = { value: '' };
+  state = {value: ''};
 
   handleChange = event => {
     const value = event.target.value;
@@ -14,11 +13,10 @@ class NewItem extends Component {
   };
 
   handleSubmit = event => {
-    const { addItem } = this.props;
-    const { value } = this.state;
+    const {value} = this.state;
 
     event.preventDefault();
-    addItem({value, id: uniqueId, packed: false});
+    addItem(value)
 
     this.setState({
       value: ''
@@ -26,7 +24,7 @@ class NewItem extends Component {
   };
 
   render() {
-    const { value } = this.state;
+    const {value} = this.state;
 
     return (
       <form className="NewItem" onSubmit={this.handleSubmit}>

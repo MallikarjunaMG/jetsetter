@@ -4,57 +4,37 @@ import CountDown from './CountDown';
 import NewItem from './NewItem';
 import Items from './Items';
 
-import './Application.css';
+import Store from './Store';
 
-const defaultState = [
-  { value: 'Pants', id: uniqueId(), packed: false },
-  { value: 'Jacket', id: uniqueId(), packed: false },
-  { value: 'iPhone Charger', id: uniqueId(), packed: false },
-  { value: 'MacBook', id: uniqueId(), packed: false },
-  { value: 'Sleeping Pills', id: uniqueId(), packed: true },
-  { value: 'Underwear', id: uniqueId(), packed: false },
-  { value: 'Hat', id: uniqueId(), packed: false },
-  { value: 'T-Shirts', id: uniqueId(), packed: false },
-  { value: 'Belt', id: uniqueId(), packed: false },
-  { value: 'Passport', id: uniqueId(), packed: true },
-  { value: 'Sandwich', id: uniqueId(), packed: true },
-];
+import './Application.css';
 
 class Application extends Component {
   state = {
-    items: defaultState
+    items: Store.getItems()
   };
 
-  addItem = itemToAdd => {
+  updateItemStore = () => {
     this.setState({
-      items: [itemToAdd, ...this.state.items]
+      items: Store.getItems()
     })
   }
 
-  removeItem = (itemToRemove) => {
-    const items = this.state.items.filter(item => itemToRemove.id !== item.id);
-    this.setState({
-      items
-    });
-
+  componentDidMount() {
+    Store.on('change', this.updateItemStore);
   }
 
-  toggleItem = (itemToToggle) => {
-    this.setState({
-      items: this.state.items.map((item) => {
-        if(item.id !== itemToToggle.id) return item;
-        return {...itemToToggle, packed: !itemToToggle.packed}
-      })
-    })
+  componentWillUnmount() {
+    Store.off('change', this.updateItemStore);
   }
 
   markAllUnpacked = () => {
-    const items = this.state.items.map(item => {
-      return {...item, packed: false}
-    });
-    this.setState({
-      items
-    })
+    
+    // const items = this.state.items.map(item => {
+    //   return {...item, packed: false}
+    // });
+    // this.setState({
+    //   items
+    // })
   }
 
   render() {
@@ -64,10 +44,10 @@ class Application extends Component {
 
     return (
       <div className="Application">
-        <NewItem addItem={this.addItem} />
+        <NewItem />
         <CountDown />
-        <Items title="Unpacked Items" items={unpackedItems} toggleItem={this.toggleItem} removeItem={this.removeItem} />
-        <Items title="Packed Items" items={packedItems} toggleItem={this.toggleItem} removeItem={this.removeItem} />
+        <Items title="Unpacked Items" items={unpackedItems} />
+        <Items title="Packed Items" items={packedItems} />
         <button className="button full-width" onClick={() => this.markAllUnpacked()}>Mark All As Unpacked</button>
       </div>
     );
